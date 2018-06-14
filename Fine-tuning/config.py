@@ -17,7 +17,7 @@ def setting():
     net_arg.add_argument('--save_model', type=str2bool, default="False")
     net_arg.add_argument('--max_step', type=int, default=20000)
     net_arg.add_argument('--decay_step', type=int, default=16000)
-    net_arg.add_argument('--log_step', type=int, default=50)
+    net_arg.add_argument('--log_step', type=int, default=500)
     net_arg.add_argument('--save_step', type=int, default=5000)
     net_arg.add_argument('--random_seed', type=int, default=100)
     net_arg.add_argument('--batch_size', type=int, default=64)

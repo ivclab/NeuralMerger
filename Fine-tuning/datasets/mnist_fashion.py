@@ -87,7 +87,7 @@ def get_split(config, split_name, dataset_dir, batch_size, file_pattern=None, re
     [resized_image, label],
     batch_size=batch_size,
     capacity=capacity,
-    num_threads=4,
+    num_threads=1,
     min_after_dequeue=min_after_dequeue,
     seed=config.random_seed)
 
