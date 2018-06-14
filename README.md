@@ -2,13 +2,13 @@
 Official implementation of [Unifying and Merging Well-trained Deep Neural Networks for Inference Stage](https://arxiv.org/abs/1805.04980).
 
 ## Usage
+Fine-tuning: Finetune the merged model of two well-trained neural networks (Tensorflow implementation).
+Inference:   Test the speed of the merged model (C implementation).
 
     NeuralMerger
         ├─────── Fine-tuning
         └─────── Inference
 
-Fine-tuning: Finetune the merged model of two well-trained neural networks (Tensorflow implementation).
-Inference:   Test the speed of the merged model (C implementation).
 
 1. Clone the NeuralMerger repository:
 
