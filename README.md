@@ -10,16 +10,15 @@ Inference:   Test the speed of the merged model (C implementation).
         └─────── Inference
 
 
-1. Clone the NeuralMerger repository:
+1.Clone the NeuralMerger repository:
 
-```python
-$ git clone --recursive https://github.com/ivclab/NeuralMerger.git
-```
+    $ git clone --recursive https://github.com/ivclab/NeuralMerger.git
 
-2. Follow the instruction in [finetuning](https://github.com/ivclab/NeuralMerger/tree/master/Fine-tuning) and get the well-trained merged model.
+
+2.Follow the instruction in [finetuning](https://github.com/ivclab/NeuralMerger/tree/master/Fine-tuning) and get the well-trained merged model.
   
 
-3. Test the merged model on Inference Code.
+3.Test the merged model on Inference Code.
 
 
 ## Citation
