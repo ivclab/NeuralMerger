@@ -17,6 +17,8 @@ Download TFRecords Data and Well-trained model weight
 
 To merge Lenet-Sound and Lenet-Fashion:
     
-    $ python finetuning.py --net=TASK_NAME --merger_dir=MERGED_MODEL_DIR
+    
+    # $ python finetuning.py --net=TASK_NAME --merger_dir=MERGED_MODEL_DIR
     $ python finetuning.py --net=lenetsound_lenetfashion --merger_dir='./weight_loader/weight/lenetsound_lenetfashion/merge_ACCU/' --batch_size=64
+    
 
