@@ -3,16 +3,18 @@ Official implementation of [Unifying and Merging Well-trained Deep Neural Networ
 
 ## Usage
 
-NeuralMerger
-    ├─────── Fine-tuning
-    └─────── Inference
+    NeuralMerger
+        ├─────── Fine-tuning
+        └─────── Inference
 
 Fine-tuning: Finetune the merged model of two well-trained neural networks (Tensorflow implementation).
 Inference:   Test the speed of the merged model (C implementation).
 
-1. Clone the NeuralMerger repository
+1. Clone the NeuralMerger repository:
 
-   $ git clone --recursive https://github.com/ivclab/NeuralMerger.git
+    ```
+    $ git clone --recursive https://github.com/ivclab/NeuralMerger.git
+    ```
 
 2. Follow the instruction in [finetuning](https://github.com/ivclab/NeuralMerger/tree/master/Fine-tuning) and get the well-trained merged model.
 
