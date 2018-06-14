@@ -16,10 +16,10 @@ Official implementation of [Unifying and Merging Well-trained Deep Neural Networ
     $ git clone --recursive https://github.com/ivclab/NeuralMerger.git
 
 
-2.Follow the instruction in [finetuning](https://github.com/ivclab/NeuralMerger/tree/master/Fine-tuning) and get the well-trained merged model.
+2.Follow the instruction in [Fine-tuning](https://github.com/ivclab/NeuralMerger/tree/master/Fine-tuning) and get the well-trained merged model.
   
 
-3.Test the merged model on Inference Code.
+3.Test the well-trained merged model on [Inference](https://github.com/ivclab/NeuralMerger/tree/master/Inference).
 
 
 ## Citation
