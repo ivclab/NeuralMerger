@@ -11,15 +11,17 @@
 - The OUI-Adience (https://www.openu.ac.il/home/hassner/Adience/publications.html)
 
 ## How to run
-Download TFRecords Data and Well-trained model weight:
+- Download TFRecords Data and Well-trained model weight:
 
-    
+    ```
     $ python download.py
-    
+    ```
 
-To merge Lenet-Sound and Lenet-Fashion:
-    
-    $ python finetuning.py --net=lenetsound_lenetfashion --merger_dir='./weight_loader/weight/lenetsound_lenetfashion/merge_ACCU/' --batch_size=64
+- To merge **Lenet-Sound** and **Lenet-Fashion**:
+    ```
+    $ python finetuning.py --net=lenetsound_lenetfashion --merger_dir='./weight_loader/weight/lenetsound_lenetfashion/merge_ACCU/' --batch_size=64  --save_model=True
+    ```
+- The model will be saved in ./logs/FOLDER_NAME/
     
     
 
