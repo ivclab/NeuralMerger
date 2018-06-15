@@ -1,6 +1,7 @@
 # Fine-tuning
 ## Requirements
 - Python 2.7
+- [requests](https://github.com/requests/requests)
 - [tqdm](https://github.com/tqdm/tqdm)
 - [TensorFlow 1.4.0 or higher](https://github.com/tensorflow/tensorflow)
 
