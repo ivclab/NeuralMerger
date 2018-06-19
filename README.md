@@ -25,10 +25,10 @@ Official implementation of [Unifying and Merging Well-trained Deep Neural Networ
 ## Citation
 Please cite following paper if these codes help your research:
 
-    @Article{
+    @inproceedings{
       Title   = {Unifying and Merging Well-trained Deep Neural Networks for Inference Stage},
       Author  = {Chou, Yi-Min and Chan, Yi-Ming and Lee, Jia-Hong and Chiu, Chih-Yi and Chen, Chu-Song}, 
-      Journal = {International Joint Conference on Artificial Intelligence, IJCAI-ECAI},
+      booktitle = {International Joint Conference on Artificial Intelligence, IJCAI-ECAI},
       year    = {2018}
     }
 
