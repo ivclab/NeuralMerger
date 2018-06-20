@@ -27,7 +27,7 @@ $ python finetuning.py --net=lenetsound_lenetfashion --merger_dir=./weight_loade
 
 - The merged model (after fine-tuning) will be saved in `./logs/FOLDER_NAME/`
 
-### Experimental results 
+## Experimental results 
 
 The experimental results of mergning **Lenet-Sound** and **Lenet-Fashion**:
 
