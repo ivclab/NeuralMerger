@@ -29,7 +29,7 @@ $ python finetuning.py --net=lenetsound_lenetfashion --merger_dir=./weight_loade
 
 ## Experimental results 
 
-The experimental results of mergning **Lenet-Sound** and **Lenet-Fashion**:
+The experimental results (mean values over five repetition) of mergning **Lenet-Sound** and **Lenet-Fashion** :
 
 Network Model | Sound Accuracy | Fashion Accuracy | Model Size 
 ----------------- | ---------------- | ---------------- | ----------------
