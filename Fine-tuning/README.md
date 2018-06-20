@@ -9,7 +9,7 @@
 - Multi-View Clothing (https://github.com/MVC-Datasets/MVC)
 - The OUI-Adience (https://www.openu.ac.il/home/hassner/Adience/publications.html)
 
-## How to run
+## How to Run
 - Install required packages:
 ```bash
 $ pip install -r requirements.txt
@@ -28,7 +28,7 @@ $ python finetuning.py --net=lenetsound_lenetfashion --merger_dir=./weight_loade
 
 - The merged model (after fine-tuning) will be saved in `./logs/FOLDER_NAME/`
 
-## Experimental results 
+## Experimental Results 
 
 The experimental results (mean values over five repetition) of mergning **Lenet-Sound** and **Lenet-Fashion** :
 
