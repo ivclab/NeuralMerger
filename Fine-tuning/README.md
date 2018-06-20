@@ -1,8 +1,6 @@
 # Fine-tuning
-## Requirements
+## Prerequisition
 - Python 2.7
-- [requests](https://github.com/requests/requests)
-- [tqdm](https://github.com/tqdm/tqdm)
 - [TensorFlow 1.4.0 or higher](https://github.com/tensorflow/tensorflow)
 
 ## Datasets
@@ -12,14 +10,17 @@
 - The OUI-Adience (https://www.openu.ac.il/home/hassner/Adience/publications.html)
 
 ## How to run
-- Download TFRecords Data and Well-trained Neural Network weight:
+- Install required packages:
+```bash
+$ pip install -r requirements.txt
+```
 
+- Download TFRecords Data and Well-trained Neural Network weight:
 ```bash
 $ python download.py
 ```
 
-- To fine-tune the merged model of **Lenet-Sound** and **Lenet-Fashion**:
-
+- Fine-tune the merged model of **Lenet-Sound** and **Lenet-Fashion**:
 ```bash
 # $ python finetuning.py --net=TASK_NAME --merger_dir=MERGED_MODEL_DIR
 $ python finetuning.py --net=lenetsound_lenetfashion --merger_dir=./weight_loader/weight/lenetsound_lenetfashion/merge_ACCU/ --batch_size=64  --save_model=True
