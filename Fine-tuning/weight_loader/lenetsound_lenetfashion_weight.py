@@ -98,7 +98,8 @@ def weight_loader(config):
     print('Codebook  subspace: [%3d, %3d, %3d]'%(M_codebook[0].shape[2],M_codebook[1].shape[2],M_codebook[2].shape[2]))
     print('Codeworkd numbers : [%3d, %3d, %3d]'%(M_codebook[0].shape[1],M_codebook[1].shape[1],M_codebook[2].shape[1]))
     print('Max   Iteration   : %d'%config.max_step)
-    print('Learning Rate     : %.4f'%config.lr_rate)
+    sys.stdout.write('Learning Rate     : ')
+    print(config.lr_rate)
     print('Batch Size        : %d'%config.batch_size)
 
     return  M_codebook,sound_w,sound_b,M1_index,M1_output_layer,fashion_w,fashion_b,M2_index,M2_output_layer

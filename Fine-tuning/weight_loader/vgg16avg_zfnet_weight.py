@@ -108,7 +108,8 @@ def weight_loader(config):
     sys.stdout.write('Shared Layers     : ')
     print(shared)
     print('Max   Iteration   : %d'%config.max_step)
-    print('Learning Rate     : %.4f'%config.lr_rate)
+    sys.stdout.write('Learning Rate     : ')
+    print(config.lr_rate)
     print('Batch Size        : %d'%config.batch_size)
 
     M1_output_layer = load_bin(PATH_MERGE + 'M1_outputlayer.bin').transpose(1,0)
