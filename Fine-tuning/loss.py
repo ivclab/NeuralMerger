@@ -62,7 +62,7 @@ def loss_function(config,merged_net):
     gamma           = 10
     M1_loss         = layer_loss1 + gamma*label_loss1
     M2_loss         = layer_loss2 + gamma*label_loss2
-    tf.summary.scalar('loss', M1_loss+M2_loss)
+
 
     ##############
     ## Training ##
@@ -72,7 +72,7 @@ def loss_function(config,merged_net):
     initial_learning_rate = config.lr_rate
     learning_rate   = tf.train.exponential_decay( initial_learning_rate,
                                                 global_step=global_step,
-                                                decay_steps=config.decay_step ,decay_rate=0.1,staircase=True)
+                                                decay_steps=config.decay_step ,decay_rate=config.decay_rate,staircase=True)
 
     with tf.control_dependencies([add_global]):
         trainer1    = tf.train.AdamOptimizer(learning_rate).minimize(M1_loss)

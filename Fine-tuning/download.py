@@ -67,7 +67,10 @@ def save_response_content(response, destination):
                 f.write(chunk)
 
 if __name__ == "__main__":
-    
+    path = './logs' 
+    if not os.path.exists(path):
+        os.makedirs(path)
+    print('Download merged model ...')
     file_id = '1clKF1zxd2lToejzKvzuubWJIkt-xpoIk'
     destination = './weight_loader/weight.zip'
     download_file_from_google_drive(file_id, destination)
@@ -76,6 +79,7 @@ if __name__ == "__main__":
         zf.extractall('./weight_loader')
     os.remove(destination)
 
+    print('Download calibration data ...')
     file_id = '1y0gfVkg44BlN8gbJgr8azJq115CaiLJy'
     destination = 'tfdata.zip'
     download_file_from_google_drive(file_id, destination)

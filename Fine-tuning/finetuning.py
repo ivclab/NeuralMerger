@@ -47,8 +47,12 @@ def train_test(config):
     ######################
     today = datetime.now()
     folder_name = config.net + today.strftime('_%m%d') + str(today.hour) + str(today.minute)
-    if  os.path.exists("logs/"+folder_name):
-        raise ValueError('Exist folder name %s' % folder_name)
+    if  config.save_model :
+        path = "logs/"+folder_name
+        if not os.path.exists(path):
+            os.makedirs(path)
+        else:
+            raise ValueError('Exist folder name %s' % folder_name)
 
     ###############################################
     ## Load Well-Trained Weight and Merged Model ##
@@ -79,9 +83,7 @@ def train_test(config):
     variables       = tf.trainable_variables()
     
     with tf.Session()  as sess:
-        loss_log    = tf.summary.merge_all()
-        if config.save_model == True:
-            writer      = tf.summary.FileWriter("logs/"+folder_name,sess.graph)
+
         log_step    = config.log_step
         sess.run(init_op)
         coord       = tf.train.Coordinator()
@@ -98,15 +100,14 @@ def train_test(config):
                                         input_op['x2']:x2,
                                         input_op['y2']:y2})
             if (i% log_step == 0):
-                loss,log = sess.run([loss_op,loss_log],feed_dict={ input_op['x1']:x1,
+                loss = sess.run(loss_op,feed_dict={ input_op['x1']:x1,
                                                     input_op['y1']:y1,
                                                     input_op['x2']:x2,
                                                     input_op['y2']:y2})
                 print('[{:6d}/{}]  M1 loss:{:.3f}  M2 Loss:{:.3f}'.format(i,max_step,loss['M1_loss'],loss['M2_loss']))
-                if config.save_model == True:
-                    writer.add_summary(log,i)
+
             
-            if (i%config.save_step == config.save_step-1 and config.save_model == True):
+            if (i%config.save_step == config.save_step-1 or i==(max_step-1)) and config.save_model == True:
                 saver(config,sess.run(variables),folder_name)
 
 

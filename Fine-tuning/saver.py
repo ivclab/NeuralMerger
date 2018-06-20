@@ -38,6 +38,23 @@ def saver(config,shared_codebook,folder_name):
     shutil.copy2(PATH_MERGE + 'model2.txt', NEW_PATH + 'model2.txt')
     shutil.copy2(PATH_MERGE + 'merged_codebook.txt', NEW_PATH + 'merged_codebook.txt')
 
+    # copy bias
+    MERGER_NAME = config.net
+    task1,task2 = MERGER_NAME.split("_")
+    base_path  = config.weight_dir
+    
+    bias1_path  = base_path + config.net + '/' + task1 + '/'
+    b1_name     = read_bin.load_txt(bias1_path + "/bias.txt")
+    shutil.copy2(bias1_path + 'bias.txt', NEW_PATH + 'bias1.txt')
+    for i in range(len(b1_name)):
+        shutil.copy2(bias1_path + b1_name[i], NEW_PATH + b1_name[i])
+    
+    bias2_path  = base_path + config.net + '/' + task2 + '/'
+    b2_name     = read_bin.load_txt(bias2_path + "/bias.txt")
+    shutil.copy2(bias2_path + 'bias.txt', NEW_PATH + 'bias2.txt')
+    for i in range(len(b2_name)):
+        shutil.copy2(bias2_path + b2_name[i], NEW_PATH + b2_name[i])
+
     # copy asmt
     for i in range(len(i1_name)):
         shutil.copy2(PATH_MERGE + i1_name[i], NEW_PATH + i1_name[i])
