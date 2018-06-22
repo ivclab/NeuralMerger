@@ -28,16 +28,6 @@ $ python finetuning.py --net=lenetsound_lenetfashion --merger_dir=./weight_loade
 
 - The merged model (after fine-tuning) will be saved in `./logs/FOLDER_NAME/`
 
-## Experimental Results 
-
-The experimental results (mean values over five repetition) of mergning **Lenet-Sound** and **Lenet-Fashion** :
-
-Network Model | Sound Accuracy | Fashion Accuracy | Model Size 
------------------ | ---------------- | ---------------- | ----------------
-Lenet-Sound     |**78.08%** | -         | 17.1 MB
-Lenet-Fashion   |  -        |**91.57%** | 17.0 MB
-Merged ACCU     |  78.06%   | 91.08%    | 3.3 MB
-Merged LIGHT    |  77.66%   | 90.89%    | 2.3 MB
 
 
     
