@@ -1,6 +1,8 @@
 # NeuralMerger
 Official implementation of [Unifying and Merging Well-trained Deep Neural Networks for Inference Stage](https://arxiv.org/abs/1805.04980).
 
+Created by [Yi-Min Chou](https://github.com/yyyjoe) , [Yi-Ming Chan](https://github.com/yimingchan), [Jia-Hong Lee](https://github.com/Jia-HongHenryLee), Chih-Yi Chiu, Chu-Song Chen
+
 ## Usage
 **Fine-tuning**: Finetune the merged model of two well-trained neural networks (Tensorflow implementation).
 
@@ -31,4 +33,7 @@ Please cite following paper if these codes help your research:
       booktitle = {International Joint Conference on Artificial Intelligence, IJCAI-ECAI},
       year    = {2018}
     }
+    
+## Contact
+Please feel free to leave suggestions or comments to [Yi-Min Chou](https://github.com/yyyjoe) , Yi-Ming Chan(yiming@iis.sinica.edu.tw), [Jia-Hong Lee](https://github.com/Jia-HongHenryLee), Chih-Yi Chiu(chihyi.chiu@gmail.com), Chu-Song Chen(song@iis.sinica.edu.tw)
 
