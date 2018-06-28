@@ -34,6 +34,14 @@ Please cite following paper if these codes help your research:
       year    = {2018}
     }
     
+    @inproceedings{chou2018merging,
+      title={Merging Deep Neural Networks for Mobile Devices},
+      author={Chou, Yi-Min and Chan, Yi-Ming and Lee, Jia-Hong and Chiu, Chih-Yi and Chen, Chu-Song},
+      booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops},
+      pages={1686--1694},
+      year={2018}
+    }   
+    
 ## Contact
 Please feel free to leave suggestions or comments to [Yi-Min Chou](https://github.com/yyyjoe) , Yi-Ming Chan(yiming@iis.sinica.edu.tw), [Jia-Hong Lee](https://github.com/Jia-HongHenryLee), Chih-Yi Chiu(chihyi.chiu@gmail.com), Chu-Song Chen(song@iis.sinica.edu.tw)
 
