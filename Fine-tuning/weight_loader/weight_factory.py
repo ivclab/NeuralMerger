@@ -35,8 +35,8 @@
 # SOFTWARE.
 # ===================================================================================================================
 import tensorflow as tf
-import vgg16avg_zfnet_weight
-import lenetsound_lenetfashion_weight
+from weight_loader import vgg16avg_zfnet_weight
+from weight_loader import lenetsound_lenetfashion_weight
 
 model_map = { 'lenetsound_lenetfashion': lenetsound_lenetfashion_weight,
               'vggclothing_zfgender': vgg16avg_zfnet_weight,

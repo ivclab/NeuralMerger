@@ -23,7 +23,7 @@
 import numpy as np
 import sys
 np.set_printoptions(threshold=np.nan)
-from read_bin import load_bin,load_txt
+from weight_loader.read_bin import load_bin,load_txt
 def weight_loader(config):
     MERGER_NAME = config.net
     task1,task2 = MERGER_NAME.split("_")

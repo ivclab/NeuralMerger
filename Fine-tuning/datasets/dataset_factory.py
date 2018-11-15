@@ -35,10 +35,10 @@
 # SOFTWARE.
 # ===================================================================================================================
 
-import sound20
-import mnist_fashion
-import mvc_clothing
-import gender
+from datasets import sound20
+from datasets import mnist_fashion
+from datasets import mvc_clothing
+from datasets import gender
 import numpy as np
 import tensorflow as tf
 slim = tf.contrib.slim

@@ -36,8 +36,8 @@
 # ===================================================================================================================
 import tensorflow as tf
 
-import vgg16avg_zfnet
-import lenetsound_lenetfashion
+from nets import vgg16avg_zfnet
+from nets import lenetsound_lenetfashion
 networks_map = {'lenetsound_lenetfashion': lenetsound_lenetfashion.lenetsound_lenetfashion,
                 'vggclothing_zfgender': vgg16avg_zfnet.vgg16avg_zfnet,
                }

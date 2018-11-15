@@ -1,0 +1,16 @@
+#ignore g++
+*.o
+MergedCNN
+
+#ignore models
+*.pyc
+*.tfrecords
+*.bin
+Fine-tuning/weight_loader/weight/
+Fine-tuning/TFRecord/
+
+#ignore logs
+Fine-tuning/logs/
+
+#ignore settings
+*.json
