@@ -27,11 +27,13 @@ Created by [Yi-Min Chou](https://github.com/yyyjoe) , [Yi-Ming Chan](https://git
 ## Citation
 Please cite following paper if these codes help your research:
 
-    @inproceedings{
-      Title   = {Unifying and Merging Well-trained Deep Neural Networks for Inference Stage},
-      Author  = {Chou, Yi-Min and Chan, Yi-Ming and Lee, Jia-Hong and Chiu, Chih-Yi and Chen, Chu-Song}, 
-      booktitle = {International Joint Conference on Artificial Intelligence, IJCAI-ECAI},
-      year    = {2018}
+    @inproceedings{chou2018unifying,
+      title={Unifying and merging well-trained deep neural networks for inference stage},
+      author={Chou, Yi-Min and Chan, Yi-Ming and Lee, Jia-Hong and Chiu, Chih-Yi and Chen, Chu-Song},
+      booktitle={Proceedings of the 27th International Joint Conference on Artificial Intelligence},
+      pages={2049--2056},
+      year={2018},
+      organization={AAAI Press}
     }
     
     @inproceedings{chou2018merging,
