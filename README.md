@@ -45,5 +45,5 @@ Please cite following paper if these codes help your research:
     }   
     
 ## Contact
-Please feel free to leave suggestions or comments to [Yi-Min Chou](https://github.com/yyyjoe) , Yi-Ming Chan(yiming@iis.sinica.edu.tw), [Jia-Hong Lee](https://github.com/Jia-HongHenryLee), Chih-Yi Chiu(chihyi.chiu@gmail.com), Chu-Song Chen(song@iis.sinica.edu.tw)
+Please feel free to leave suggestions or comments to [Yi-Min Chou](https://github.com/yyyjoe) , Yi-Ming Chan(yiming@iis.sinica.edu.tw), [Jia-Hong Lee](https://github.com/Jia-HongHenryLee)(honghenry.lee@gmail.com), Chih-Yi Chiu(chihyi.chiu@gmail.com), Chu-Song Chen(song@iis.sinica.edu.tw)
 
