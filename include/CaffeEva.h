@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include <memory> // for share ptr
+
 #include "../include/Common.h"
 #include "../include/BlasWrapper.h"
 #include "../include/CaffePara.h"
@@ -35,7 +37,7 @@ typedef struct {
   ENUM_BufUsage usage;
   int dimCnt;
   int dimLenLst[kMatDimCntMax];
-  Matrix<float>* pFeatBuf;
+  Matrix< float>* pFeatBuf;
 } FeatBufStr;
 typedef std::vector<FeatBufStr> FeatBufStrLst;
 typedef std::vector<FeatBufStrLst> FeatBufStrMat;
@@ -44,7 +46,7 @@ typedef std::vector<FeatBufStrLst> FeatBufStrMat;
 typedef struct {
   int dimCnt;
   int dimLenLst[kMatDimCntMax];
-  Matrix<float>* pCtrdBuf;
+  std::shared_ptr<Matrix<float>> pCtrdBuf;
 } CtrdBufStr;
 typedef std::vector<CtrdBufStr> CtrdBufStrLst;
 
@@ -52,8 +54,8 @@ typedef std::vector<CtrdBufStr> CtrdBufStrLst;
 typedef struct {
   int dimCnt;
   int dimLenLst[kMatDimCntMax];
-  Matrix<uint8_t>* pAsmtBuf;
-  Matrix<CBLAS_INT>* pAsmtBufExt;  // for cblas_sgthr()
+  std::shared_ptr<Matrix<uint8_t>> pAsmtBuf;
+  std::shared_ptr<Matrix<CBLAS_INT>> pAsmtBufExt;  // for cblas_sgthr()
 } AsmtBufStr;
 typedef std::vector<AsmtBufStr> AsmtBufStrLst;
 
@@ -72,6 +74,10 @@ class CaffeEva {
       const std::string& dirPathMainSrc, const std::string& fileNamePfxSrc);
   // load dataset
   bool LoadDataset(const std::string& dirPathData);
+  // load dataset without label
+  bool LoadDatasetonly(const std::string& dirPathData);
+  // load output only
+  bool LoadOutputonly(const std::string& fileName);
   // load caffe parameters
   bool LoadCaffePara(void);
   // run forward process for all samples
@@ -81,8 +87,24 @@ class CaffeEva {
       const Matrix<float>& imgDataIn, Matrix<float>* pProbVecOut);
   // evaluate the classification accuracy
   void CalcPredAccu(void);
+  // evaluate the output of the ith layer
+  void EvaluateOutput(int iLayer);
   // display the elapsed time of each step
   float DispElpsTime(void);
+  // Verify the bin file after the model have been set
+  bool  VerifyTheBin(void);
+  // Get the DataLst
+  void GetDataMap(int indexL, int indexU, Matrix<float> * output); 
+  // Get number of layers
+  int GetLayerCount(void) { return caffeParaObj.layerCnt;}
+  // Check if it is PQ approximate
+  bool IsApproximate(void) { return enblAprx;}
+  
+ protected: 
+  // Get the featMap
+  Matrix<float> *GetFeatMap(int iLayer) { return &featMapLst[iLayer];}
+  // Get the weightMap
+  Matrix<float> *GetWeightMatrix(int iLayer);
 
  private:
   // whether approximate computation is enabled
@@ -97,6 +119,8 @@ class CaffeEva {
   CaffePara caffeParaObj;
   // evaluation samples' feature vectors
   Matrix<float> dataLst;
+  // For evaluation output. Good for debug
+  Matrix<float> outputMat;
   // evaluation samples' ground-truth labels
   Matrix<uint16_t> lablVecGrth;
   // evaluation samples' predicted labels
@@ -117,11 +141,14 @@ class CaffeEva {
   StopWatch swAllLayers;
   StopWatch swConvLayer;
   StopWatch swPoolLayer;
+  StopWatch swAvgPoolLayer;
   StopWatch swFCntLayer;
   StopWatch swReLuLayer;
   StopWatch swLoRNLayer;
   StopWatch swDrptLayer;
   StopWatch swSMaxLayer;
+  StopWatch swPReLULayer;
+  StopWatch swShortcutLayer;
   StopWatch swCompLkupTblConv;
   StopWatch swEstiInPdValConv;
   StopWatch swCompLkupTblFCnt;
@@ -150,7 +177,11 @@ class CaffeEva {
       const int layerInd, Matrix<float>* pFeatMapDst);
   void CalcFeatMap_ConvAprx(const Matrix<float>& featMapSrc,
       const int layerInd, Matrix<float>* pFeatMapDst);
+  void CalcFeatMap_ConvAprx2(const Matrix<float>& featMapSrc,
+      const int layerInd, Matrix<float>* pFeatMapDst); // Modified by Yi-Ming
   void CalcFeatMap_Pool(const Matrix<float>& featMapSrc,
+      const int layerInd, Matrix<float>* pFeatMapDst);
+  void CalcFeatMap_AvgPool(const Matrix<float>& featMapSrc,
       const int layerInd, Matrix<float>* pFeatMapDst);
   void CalcFeatMap_FCnt(const Matrix<float>& featMapSrc,
       const int layerInd, Matrix<float>* pFeatMapDst);
@@ -162,7 +193,13 @@ class CaffeEva {
       const int layerInd, Matrix<float>* pFeatMapDst);
   void CalcFeatMap_ReLu(const Matrix<float>& featMapSrc,
       const int layerInd, Matrix<float>* pFeatMapDst);
+  void CalcFeatMap_PReLU(const Matrix<float>& featMapSrc,
+      const int layerInd, Matrix<float>* pFeatMapDst);
+  void CalcFeatMap_Shortcut(const Matrix<float>& featMapSrc,
+       const Matrix<float>& featMapFrom, Matrix<float>* pFeatMapDst);      
   void CalcFeatMap_LoRN(const Matrix<float>& featMapSrc,
+      const int layerInd, Matrix<float>* pFeatMapDst);
+  void CalcFeatMap_LoRNWithin(const Matrix<float>& featMapSrc,
       const int layerInd, Matrix<float>* pFeatMapDst);
   void CalcFeatMap_Drpt(const Matrix<float>& featMapSrc,
       const int layerInd, Matrix<float>* pFeatMapDst);

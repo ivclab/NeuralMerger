@@ -91,6 +91,8 @@ bool FileIO::ReadBinFile(const std::string& filePath, Matrix<T>* pDataLst) {
       assert(rtnVal == dataCntInBuffer);
     } else {  // the last data buffer
       rtnVal = fread(dataVec, sizeof(T), dataCntInBufferLast, inFile);
+      if(rtnVal != dataCntInBufferLast)
+       printf("Read Error!. Read %d , Input %d\n", rtnVal, dataCntInBufferLast);
       assert(rtnVal == dataCntInBufferLast);
     }  // ENDIF: bufferIndData
   }  // ENDFOR: bufferIndData

@@ -19,7 +19,7 @@ class StopWatch {
   // pause the stop-watch
   inline void Pause(void);
   // return the elapsed time
-  inline float GetTime(void);
+  inline double GetTime(void);
 
  private:
   // indicator for whether the stop-watch is running
@@ -29,7 +29,7 @@ class StopWatch {
   // timestamp of the latest Pause() operation
   time_t timeEnd;
   // elapsed time (in seconds)
-  float timeElapsed;
+  time_t timeElapsed;
 };
 
 // implementation of member functions
@@ -50,12 +50,12 @@ inline void StopWatch::Pause(void) {
   if (isRun) {
     isRun = false;
     timeEnd = clock();
-    timeElapsed += static_cast<float>(timeEnd - timeBeg) / CLOCKS_PER_SEC;
+    timeElapsed += timeEnd - timeBeg;
   }  // ENDIF: isRun
 }
 
-inline float StopWatch::GetTime(void) {
-  return timeElapsed;
+inline double StopWatch::GetTime(void) {
+  return static_cast<double>(timeElapsed) / CLOCKS_PER_SEC;
 }
 
 #endif  // INCLUDE_STOPWATCH_H_

@@ -4,27 +4,33 @@
  * Paper: Quantized Convolutional Neural Networks for Mobile Devices (CVPR 2016)
  * Authors: Jiaxiang Wu, Cong Leng, Yuhang Wang, Qinghao Hu, and Jian Cheng
  */
+// Modified by : Yi-Ming Chan
+// Add "copy" and shared mechanism. Default copy will become "shallow" copy.
+// Simplify the destroy process with smart pointer  <shared_ptr>.
 
 #ifndef INCLUDE_MATRIX_H_
 #define INCLUDE_MATRIX_H_
 
 #include <algorithm>
+#include <vector> // For dynamic array
+#include <memory> // For memory sharing
 
 #include "../include/Common.h"
 
 const int kMatDimCntMax = 4;
 
-template<typename T>
-class Matrix {
- public:
+template <typename T>
+class Matrix
+{
+public:
   // constructor function
   Matrix(void);
-  Matrix(const Matrix<T>& mat);
+  Matrix(const Matrix<T> &mat); // Hard copy
   explicit Matrix(const int m);
   Matrix(const int m, const int n);
   Matrix(const int m, const int n, const int p);
   Matrix(const int m, const int n, const int p, const int q);
-  Matrix(const int dimCnt, const int* dimLenLst);
+  Matrix(const int dimCnt, const int *dimLenLst);
   // de-constructor function
   ~Matrix(void);
   // create matrix
@@ -32,15 +38,17 @@ class Matrix {
   inline void Create(const int m, const int n);
   inline void Create(const int m, const int n, const int p);
   inline void Create(const int m, const int n, const int p, const int q);
-  inline void Create(const int dimCnt, const int* dimLenLst);
+  inline void Create(const int dimCnt, const int *dimLenLst);
   // release memory
   inline void Destroy(void);
+  // hard copy
+  inline void Copy(const Matrix<T> &mat);
   // obtain the data pointer
-  inline T* GetDataPtr(void) const;
-  inline T* GetDataPtr(const int im) const;
-  inline T* GetDataPtr(const int im, const int in) const;
-  inline T* GetDataPtr(const int im, const int in, const int ip) const;
-  inline T* GetDataPtr(
+  inline T *GetDataPtr(void) const;
+  inline T *GetDataPtr(const int im) const;
+  inline T *GetDataPtr(const int im, const int in) const;
+  inline T *GetDataPtr(const int im, const int in, const int ip) const;
+  inline T *GetDataPtr(
       const int im, const int in, const int ip, const int iq) const;
   // obtain the number of dimensions
   inline int GetDimCnt(void) const;
@@ -74,14 +82,14 @@ class Matrix {
   void Permute(const int mSdx, const int nSdx, const int pSdx);
   void Permute(const int mSdx, const int nSdx, const int pSdx, const int qSdx);
   // get a sub-matrix at the specified location
-  void GetSubMat(const int imBeg, Matrix<T>* pMatDst) const;
-  void GetSubMat(const int imBeg, const int inBeg, Matrix<T>* pMatDst) const;
+  void GetSubMat(const int imBeg, Matrix<T> *pMatDst) const;
+  void GetSubMat(const int imBeg, const int inBeg, Matrix<T> *pMatDst) const;
   void GetSubMat(const int imBeg,
-      const int inBeg, const int ipBeg, Matrix<T>* pMatDst) const;
+                 const int inBeg, const int ipBeg, Matrix<T> *pMatDst) const;
   void GetSubMat(const int imBeg, const int inBeg,
-      const int ipBeg, const int iqBeg, Matrix<T>* pMatDst) const;
+                 const int ipBeg, const int iqBeg, Matrix<T> *pMatDst) const;
 
- private:
+private:
   // number of dimensions
   int dimCnt_;
   // length of the 1st dimension
@@ -93,75 +101,106 @@ class Matrix {
   // length of the 4th dimension
   int q_;
   // data pointer
-  T* data_;
+  // In the case of large matrix, shared pointer to save the memory.
+  std::shared_ptr<std::vector<T>> data_;
 };
 
 // implementation of member functions
 
-template<typename T>
-Matrix<T>::Matrix(void) {
+template <typename T>
+Matrix<T>::Matrix(void)
+{
   // initialize all variables
   dimCnt_ = 0;
   data_ = nullptr;
 }
 
-template<typename T>
-Matrix<T>::Matrix(const Matrix<T>& mat) : data_(nullptr) {
+template <typename T>
+Matrix<T>::Matrix(const Matrix<T> &mat) : data_(nullptr)
+{
   // declare a static array to specify each dimension's length
   static int dimLenLst[kMatDimCntMax];
 
   // create a new matrix and copy data
-  for (int dimIdx = 0; dimIdx < mat.GetDimCnt(); dimIdx++) {
+  for (int dimIdx = 0; dimIdx < mat.GetDimCnt(); dimIdx++)
+  {
     dimLenLst[dimIdx] = mat.GetDimLen(dimIdx);
-  }  // ENDFOR: dimIdx
+  } // ENDFOR: dimIdx
   Create(mat.GetDimCnt(), dimLenLst);
-  memcpy(data_, mat.GetDataPtr(), sizeof(T) * GetEleCnt());
+  memcpy(data_->data(), mat.GetDataPtr(), sizeof(T) * GetEleCnt());
 }
 
-template<typename T>
-Matrix<T>::Matrix(const int m) : data_(nullptr) {
+template <typename T>
+inline void Matrix<T>::Copy(const Matrix<T> &mat)
+{
+  data_ = nullptr;
+  // declare a static array to specify each dimension's length
+  static int dimLenLst[kMatDimCntMax];
+
+  // create a new matrix and copy data
+  for (int dimIdx = 0; dimIdx < mat.GetDimCnt(); dimIdx++)
+  {
+    dimLenLst[dimIdx] = mat.GetDimLen(dimIdx);
+  } // ENDFOR: dimIdx
+  Create(mat.GetDimCnt(), dimLenLst);
+  memcpy(data_->data(), mat.GetDataPtr(), sizeof(T) * GetEleCnt());
+}
+
+template <typename T>
+Matrix<T>::Matrix(const int m) : data_(nullptr)
+{
   Create(m);
 }
 
-template<typename T>
-Matrix<T>::Matrix(const int m, const int n) : data_(nullptr) {
+template <typename T>
+Matrix<T>::Matrix(const int m, const int n) : data_(nullptr)
+{
   Create(m, n);
 }
 
-template<typename T>
-Matrix<T>::Matrix(const int m, const int n, const int p) : data_(nullptr) {
+template <typename T>
+Matrix<T>::Matrix(const int m, const int n, const int p) : data_(nullptr)
+{
   Create(m, n, p);
 }
 
-template<typename T>
+template <typename T>
 Matrix<T>::Matrix(
-    const int m, const int n, const int p, const int q) : data_(nullptr) {
+    const int m, const int n, const int p, const int q) : data_(nullptr)
+{
   Create(m, n, p, q);
 }
 
-template<typename T>
-Matrix<T>::Matrix(const int dimCnt, const int* dimLenLst) : data_(nullptr) {
+template <typename T>
+Matrix<T>::Matrix(const int dimCnt, const int *dimLenLst) : data_(nullptr)
+{
   Create(dimCnt, dimLenLst);
 }
 
-template<typename T>
-Matrix<T>::~Matrix(void) {
+template <typename T>
+Matrix<T>::~Matrix(void)
+{
   Destroy();
 }
 
-template<typename T>
-inline void Matrix<T>::Create(const int m) {
+template <typename T>
+inline void Matrix<T>::Create(const int m)
+{
   // release previously allocated memory
   Destroy();
 
   // create a new matrix
   dimCnt_ = 1;
   m_ = m;
-  data_ = new T[GetEleCnt()];
+  //data_ = new T[GetEleCnt()];
+  // Initial the array with value 0
+  // Create with shared pointer
+  data_ = std::make_shared<std::vector<T>>(std::vector<T>(GetEleCnt(), 0));
 }
 
-template<typename T>
-inline void Matrix<T>::Create(const int m, const int n) {
+template <typename T>
+inline void Matrix<T>::Create(const int m, const int n)
+{
   // release previously allocated memory
   Destroy();
 
@@ -169,11 +208,14 @@ inline void Matrix<T>::Create(const int m, const int n) {
   dimCnt_ = 2;
   m_ = m;
   n_ = n;
-  data_ = new T[GetEleCnt()];
+  // Initial the array with value 0
+  // Create with shared pointer
+  data_ = std::make_shared<std::vector<T>>(std::vector<T>(GetEleCnt(), 0));
 }
 
-template<typename T>
-inline void Matrix<T>::Create(const int m, const int n, const int p) {
+template <typename T>
+inline void Matrix<T>::Create(const int m, const int n, const int p)
+{
   // release previously allocated memory
   Destroy();
 
@@ -182,12 +224,16 @@ inline void Matrix<T>::Create(const int m, const int n, const int p) {
   m_ = m;
   n_ = n;
   p_ = p;
-  data_ = new T[GetEleCnt()];
+  //data_ = new T[GetEleCnt()];
+  // Initial the array with value 0
+  // Create with shared pointer
+  data_ = std::make_shared<std::vector<T>>(std::vector<T>(GetEleCnt(), 0));
 }
 
-template<typename T>
+template <typename T>
 inline void Matrix<T>::Create(
-    const int m, const int n, const int p, const int q) {
+    const int m, const int n, const int p, const int q)
+{
   // release previously allocated memory
   Destroy();
 
@@ -197,12 +243,17 @@ inline void Matrix<T>::Create(
   n_ = n;
   p_ = p;
   q_ = q;
-  data_ = new T[GetEleCnt()];
+  //data_ = new T[GetEleCnt()];
+  // Initial the array with value 0
+  // Create with shared pointer
+  data_ = std::make_shared<std::vector<T>>(std::vector<T>(GetEleCnt(), 0));
 }
 
-template<typename T>
-inline void Matrix<T>::Create(const int dimCnt, const int* dimLenLst) {
-  switch (dimCnt) {
+template <typename T>
+inline void Matrix<T>::Create(const int dimCnt, const int *dimLenLst)
+{
+  switch (dimCnt)
+  {
   case 1:
     Create(dimLenLst[0]);
     break;
@@ -218,56 +269,65 @@ inline void Matrix<T>::Create(const int dimCnt, const int* dimLenLst) {
   default:
     printf("[ERROR] invalid number of dimensions: %d\n", dimCnt);
     return;
-  }  // ENDSWITCH: dimCnt
+  } // ENDSWITCH: dimCnt
 }
 
-template<typename T>
-inline void Matrix<T>::Destroy(void) {
+template <typename T>
+inline void Matrix<T>::Destroy(void)
+{
   // release memory
-  if (data_ != nullptr) {
-    delete[] data_;
+  if (data_ != nullptr)
+  {
     data_ = nullptr;
-  }  // ENDIF: data_
+  } // ENDIF: data_
 
   // re-initialize variables
   dimCnt_ = 0;
 }
 
-template<typename T>
-inline T* Matrix<T>::GetDataPtr(void) const {
-  return data_;
+template <typename T>
+inline T *Matrix<T>::GetDataPtr(void) const
+{
+  return data_->data();
 }
 
-template<typename T>
-inline T* Matrix<T>::GetDataPtr(const int im) const {
-  return (data_ + im);
+template <typename T>
+inline T *Matrix<T>::GetDataPtr(const int im) const
+{
+  return (data_->data() + im);
 }
 
-template<typename T>
-inline T* Matrix<T>::GetDataPtr(const int im, const int in) const {
-  return (data_ + (im * n_ + in));
+template <typename T>
+inline T *Matrix<T>::GetDataPtr(const int im, const int in) const
+{
+  return (data_->data() + (im * n_ + in));
 }
 
-template<typename T>
-inline T* Matrix<T>::GetDataPtr(
-    const int im, const int in, const int ip) const {
-  return (data_ + ((im * n_ + in) * p_ + ip));
+template <typename T>
+inline T *Matrix<T>::GetDataPtr(
+    const int im, const int in, const int ip) const
+{
+  return (data_->data() + ((im * n_ + in) * p_ + ip));
 }
 
-template<typename T>
-inline T* Matrix<T>::GetDataPtr(
-    const int im, const int in, const int ip, const int iq) const {
-  return (data_ + (((im * n_ + in) * p_ + ip) * q_ + iq));
+template <typename T>
+inline T *Matrix<T>::GetDataPtr(
+    const int im, const int in, const int ip, const int iq) const
+{
+  return (data_->data() + (((im * n_ + in) * p_ + ip) * q_ + iq));
 }
 
-template<typename T>
-inline int Matrix<T>::GetDimCnt(void) const {
+template <typename T>
+inline int Matrix<T>::GetDimCnt(void) const
+{
   return dimCnt_;
 }
 
-template<typename T>
-inline int Matrix<T>::GetDimLen(const int dimIdx) const {
-  switch (dimIdx) {
+template <typename T>
+inline int Matrix<T>::GetDimLen(const int dimIdx) const
+{
+  switch (dimIdx)
+  {
   case 0:
     return m_;
   case 1:
@@ -279,23 +339,29 @@ inline int Matrix<T>::GetDimLen(const int dimIdx) const {
   default:
     printf("[ERROR] invalid index of dimension: %d\n", dimIdx);
     return -1;
-  }  // ENDSWITCH: dimIdx
+  } // ENDSWITCH: dimIdx
 }
 
-template<typename T>
-inline int Matrix<T>::GetDimStp(const int dimIdx) const {
+template <typename T>
+inline int Matrix<T>::GetDimStp(const int dimIdx) const
+{
   // compute the pointer step iteratively
-  if (dimIdx == dimCnt_ - 1) {
+  if (dimIdx == dimCnt_ - 1)
+  {
     return 1;
-  } else {
+  }
+  else
+  {
     return GetDimLen(dimIdx + 1) * GetDimStp(dimIdx + 1);
-  }  // ENDIF: dimIdx
+  } // ENDIF: dimIdx
 }
 
-template<typename T>
-inline int Matrix<T>::GetEleCnt(void) const {
+template <typename T>
+inline int Matrix<T>::GetEleCnt(void) const
+{
   int eleCnt = 1;
-  switch (dimCnt_) {
+  switch (dimCnt_)
+  {
   case 4:
     eleCnt *= q_;
     // fall through
@@ -311,14 +377,16 @@ inline int Matrix<T>::GetEleCnt(void) const {
   default:
     eleCnt = 0;
     break;
-  }  // ENDSWITCH: dimCnt
+  } // ENDSWITCH: dimCnt
 
   return eleCnt;
 }
 
-template<typename T>
-inline void Matrix<T>::DispSizInfo(void) const {
-  switch (dimCnt_) {
+template <typename T>
+inline void Matrix<T>::DispSizInfo(void) const
+{
+  switch (dimCnt_)
+  {
   case 1:
     printf("[INFO] matrix size: %d\n", m_);
     break;
@@ -331,111 +399,135 @@ inline void Matrix<T>::DispSizInfo(void) const {
   case 4:
     printf("[INFO] matrix size: %d x %d x %d x %d\n", m_, n_, p_, q_);
     break;
-  }  // ENDSWITCH: dimCnt
+  } // ENDSWITCH: dimCnt
 }
 
-template<typename T>
-inline void Matrix<T>::SetEleAt(const T val, const int im) {
-  data_[im] = val;
+template <typename T>
+inline void Matrix<T>::SetEleAt(const T val, const int im)
+{
+  (*data_)[im] = val;
 }
 
-template<typename T>
-inline void Matrix<T>::SetEleAt(const T val, const int im, const int in) {
-  data_[im * n_ + in] = val;
+template <typename T>
+inline void Matrix<T>::SetEleAt(const T val, const int im, const int in)
+{
+  (*data_)[im * n_ + in] = val;
 }
 
-template<typename T>
+template <typename T>
 inline void Matrix<T>::SetEleAt(
-    const T val, const int im, const int in, const int ip) {
-  data_[(im * n_ + in) * p_ + ip] = val;
+    const T val, const int im, const int in, const int ip)
+{
+  (*data_)[(im * n_ + in) * p_ + ip] = val;
 }
 
-template<typename T>
+template <typename T>
 inline void Matrix<T>::SetEleAt(
-    const T val, const int im, const int in, const int ip, const int iq) {
-  data_[((im * n_ + in) * p_ + ip) * q_ + iq] = val;
+    const T val, const int im, const int in, const int ip, const int iq)
+{
+  (*data_)[((im * n_ + in) * p_ + ip) * q_ + iq] = val;
 }
 
-template<typename T>
-inline T Matrix<T>::GetEleAt(const int im) const {
-  return data_[im];
+template <typename T>
+inline T Matrix<T>::GetEleAt(const int im) const
+{
+  return (*data_)[im];
 }
 
-template<typename T>
-inline T Matrix<T>::GetEleAt(const int im, const int in) const {
-  return data_[im * n_ + in];
+template <typename T>
+inline T Matrix<T>::GetEleAt(const int im, const int in) const
+{
+  return (*data_)[im * n_ + in];
 }
 
-template<typename T>
-inline T Matrix<T>::GetEleAt(const int im, const int in, const int ip) const {
-  return data_[(im * n_ + in) * p_ + ip];
+template <typename T>
+inline T Matrix<T>::GetEleAt(const int im, const int in, const int ip) const
+{
+  return (*data_)[(im * n_ + in) * p_ + ip];
 }
 
-template<typename T>
+template <typename T>
 inline T Matrix<T>::GetEleAt(
-    const int im, const int in, const int ip, const int iq) const {
-  return data_[((im * n_ + in) * p_ + ip) * q_ + iq];
+    const int im, const int in, const int ip, const int iq) const
+{
+  return (*data_)[((im * n_ + in) * p_ + ip) * q_ + iq];
 }
 
-template<typename T>
-inline void Matrix<T>::Resize(const int m) {
+template <typename T>
+inline void Matrix<T>::Resize(const int m)
+{
   // check matrix size
-  if (GetEleCnt() != m) {
+  if (GetEleCnt() != m)
+  {
     Create(m);
-  }  // ENDIF: GetEleCnt
+  } // ENDIF: GetEleCnt
 }
 
-template<typename T>
-inline void Matrix<T>::Resize(const int m, const int n) {
+template <typename T>
+inline void Matrix<T>::Resize(const int m, const int n)
+{
   // check matrix size
-  if (GetEleCnt() != m * n) {
+  if (GetEleCnt() != m * n)
+  {
     Create(m, n);
-  } else {
+  }
+  else
+  {
     dimCnt_ = 2;
     m_ = m;
     n_ = n;
-  }  // ENDIF: GetEleCnt
+  } // ENDIF: GetEleCnt
 }
 
-template<typename T>
-inline void Matrix<T>::Resize(const int m, const int n, const int p) {
+template <typename T>
+inline void Matrix<T>::Resize(const int m, const int n, const int p)
+{
   // check matrix size
-  if (GetEleCnt() != m * n * p) {
+  if (GetEleCnt() != m * n * p)
+  {
     Create(m, n, p);
-  } else {
+  }
+  else
+  {
     dimCnt_ = 3;
     m_ = m;
     n_ = n;
     p_ = p;
-  }  // ENDIF: GetEleCnt
+  } // ENDIF: GetEleCnt
 }
 
-template<typename T>
+template <typename T>
 inline void Matrix<T>::Resize(
-    const int m, const int n, const int p, const int q) {
+    const int m, const int n, const int p, const int q)
+{
   // check matrix size
-  if (GetEleCnt() != m * n * p * q) {
+  if (GetEleCnt() != m * n * p * q)
+  {
     Create(m, n, p, q);
-  } else {
+  }
+  else
+  {
     dimCnt_ = 4;
     m_ = m;
     n_ = n;
     p_ = p;
     q_ = q;
-  }  // ENDIF: GetEleCnt
+  } // ENDIF: GetEleCnt
 }
 
-template<typename T>
-void Matrix<T>::Permute(const int mSdx, const int nSdx) {
+template <typename T>
+void Matrix<T>::Permute(const int mSdx, const int nSdx)
+{
   // create a temporary array and copy all data
   int eleCnt = GetEleCnt();
-  T* dataTmp = new T[eleCnt];
-  memcpy(dataTmp, data_, sizeof(T) * eleCnt);
+  T *dataTmp = new T[eleCnt];
+  memcpy(dataTmp, data_->data(), sizeof(T) * eleCnt);
 
   // determine the length of each dimension after updating
   int dimLenLstSrc[kMatDimCntMax];
   int dimStpLstSrc[kMatDimCntMax];
-  for (int dimIdx = 0; dimIdx < dimCnt_; dimIdx++) {
+  for (int dimIdx = 0; dimIdx < dimCnt_; dimIdx++)
+  {
     dimLenLstSrc[dimIdx] = GetDimLen(dimIdx);
     dimStpLstSrc[dimIdx] = GetDimStp(dimIdx);
   }
@@ -445,35 +537,39 @@ void Matrix<T>::Permute(const int mSdx, const int nSdx) {
   n_ = dimLenLstSrc[nSdx];
 
   // copy data from the temporary array
-  for (int im = 0; im < m_; im++) {
+  for (int im = 0; im < m_; im++)
+  {
     int mOffset = im * dimStpLstSrc[mSdx];
 
     // determine the source/destination data pointer
     int stpSrc = dimStpLstSrc[nSdx];
-    const T* pSrc = dataTmp + mOffset;
-    T* pDst = GetDataPtr(im, 0);
+    const T *pSrc = dataTmp + mOffset;
+    T *pDst = GetDataPtr(im, 0);
 
     // copy data to (im, in, ip, :)
-    for (int in = 0; in < n_; in++, pSrc += stpSrc) {
+    for (int in = 0; in < n_; in++, pSrc += stpSrc)
+    {
       *(pDst++) = *pSrc;
-    }  // ENDFOR: in
-  }  // ENDFOR: im
+    } // ENDFOR: in
+  }   // ENDFOR: im
 
   // release the temporary array
   delete[] dataTmp;
 }
 
-template<typename T>
-void Matrix<T>::Permute(const int mSdx, const int nSdx, const int pSdx) {
+template <typename T>
+void Matrix<T>::Permute(const int mSdx, const int nSdx, const int pSdx)
+{
   // create a temporary array and copy all data
   int eleCnt = GetEleCnt();
-  T* dataTmp = new T[eleCnt];
-  memcpy(dataTmp, data_, sizeof(T) * eleCnt);
+  T *dataTmp = new T[eleCnt];
+  memcpy(dataTmp, data_->data(), sizeof(T) * eleCnt);
 
   // determine the length of each dimension after updating
   int dimLenLstSrc[kMatDimCntMax];
   int dimStpLstSrc[kMatDimCntMax];
-  for (int dimIdx = 0; dimIdx < dimCnt_; dimIdx++) {
+  for (int dimIdx = 0; dimIdx < dimCnt_; dimIdx++)
+  {
     dimLenLstSrc[dimIdx] = GetDimLen(dimIdx);
     dimStpLstSrc[dimIdx] = GetDimStp(dimIdx);
   }
@@ -484,42 +580,47 @@ void Matrix<T>::Permute(const int mSdx, const int nSdx, const int pSdx) {
   p_ = dimLenLstSrc[pSdx];
 
   // copy data from the temporary array
-  for (int im = 0; im < m_; im++) {
+  for (int im = 0; im < m_; im++)
+  {
     int mOffset = im * dimStpLstSrc[mSdx];
-    for (int in = 0; in < n_; in++) {
+    for (int in = 0; in < n_; in++)
+    {
       int nOffset = in * dimStpLstSrc[nSdx];
 
       // determine the source/destination data pointer
       int stpSrc = dimStpLstSrc[pSdx];
-      const T* pSrc = dataTmp + mOffset + nOffset;
-      T* pDst = GetDataPtr(im, in, 0);
+      const T *pSrc = dataTmp + mOffset + nOffset;
+      T *pDst = GetDataPtr(im, in, 0);
 
       // copy data to (im, in, ip, :)
-      for (int ip = 0; ip < p_; ip++, pSrc += stpSrc) {
+      for (int ip = 0; ip < p_; ip++, pSrc += stpSrc)
+      {
         *(pDst++) = *pSrc;
-      }  // ENDFOR: ip
-    }  // ENDFOR: in
-  }  // ENDFOR: im
+      } // ENDFOR: ip
+    }   // ENDFOR: in
+  }     // ENDFOR: im
 
   // release the temporary array
   delete[] dataTmp;
 }
 
-template<typename T>
+template <typename T>
 void Matrix<T>::Permute(
-    const int mSdx, const int nSdx, const int pSdx, const int qSdx) {
+    const int mSdx, const int nSdx, const int pSdx, const int qSdx)
+{
   // create a temporary array and copy all data
   int eleCnt = GetEleCnt();
-  T* dataTmp = new T[eleCnt];
-  memcpy(dataTmp, data_, sizeof(T) * eleCnt);
+  T *dataTmp = new T[eleCnt];
+  memcpy(dataTmp, data_->data(), sizeof(T) * eleCnt);
 
   // determine the length of each dimension after updating
   int dimLenLstSrc[kMatDimCntMax];
   int dimStpLstSrc[kMatDimCntMax];
-  for (int dimIdx = 0; dimIdx < dimCnt_; dimIdx++) {
+  for (int dimIdx = 0; dimIdx < dimCnt_; dimIdx++)
+  {
     dimLenLstSrc[dimIdx] = GetDimLen(dimIdx);
     dimStpLstSrc[dimIdx] = GetDimStp(dimIdx);
-  }  // ENDFOR: dimIdx
+  } // ENDFOR: dimIdx
 
   // update each dimension's length
   m_ = dimLenLstSrc[mSdx];
@@ -528,32 +629,37 @@ void Matrix<T>::Permute(
   q_ = dimLenLstSrc[qSdx];
 
   // copy data from the temporary array
-  for (int im = 0; im < m_; im++) {
+  for (int im = 0; im < m_; im++)
+  {
     int mOffset = im * dimStpLstSrc[mSdx];
-    for (int in = 0; in < n_; in++) {
+    for (int in = 0; in < n_; in++)
+    {
       int nOffset = in * dimStpLstSrc[nSdx];
-      for (int ip = 0; ip < p_; ip++) {
+      for (int ip = 0; ip < p_; ip++)
+      {
         int pOffset = ip * dimStpLstSrc[pSdx];
 
         // determine the source/destination data pointer
         int stpSrc = dimStpLstSrc[qSdx];
-        const T* pSrc = dataTmp + mOffset + nOffset + pOffset;
-        T* pDst = GetDataPtr(im, in, ip, 0);
+        const T *pSrc = dataTmp + mOffset + nOffset + pOffset;
+        T *pDst = GetDataPtr(im, in, ip, 0);
 
         // copy data to (im, in, ip, :)
-        for (int iq = 0; iq < q_; iq++, pSrc += stpSrc) {
+        for (int iq = 0; iq < q_; iq++, pSrc += stpSrc)
+        {
           *(pDst++) = *pSrc;
-        }  // ENDFOR: iq
-      }  // ENDFOR: ip
-    }  // ENDFOR: in
-  }  // ENDFOR: im
+        } // ENDFOR: iq
+      }   // ENDFOR: ip
+    }     // ENDFOR: in
+  }       // ENDFOR: im
 
   // release the temporary array
   delete[] dataTmp;
 }
 
-template<typename T>
-void Matrix<T>::GetSubMat(const int imBeg, Matrix<T>* pMatDst) const {
+template <typename T>
+void Matrix<T>::GetSubMat(const int imBeg, Matrix<T> *pMatDst) const
+{
   // determine the starting/ending height/width indexes
   int imDstBeg = std::max(0, 0 - imBeg);
   int imDstEnd = std::min(pMatDst->GetDimLen(0) - 1, m_ - 1 - imBeg);
@@ -563,14 +669,15 @@ void Matrix<T>::GetSubMat(const int imBeg, Matrix<T>* pMatDst) const {
   memset(pMatDst->GetDataPtr(), 0, sizeof(T) * pMatDst->GetEleCnt());
 
   // copy the selected part in the feature map
-  const T* featVecSrc = GetDataPtr(imDstBeg + imBeg);
-  T* featVecDst = pMatDst->GetDataPtr(imDstBeg);
+  const T *featVecSrc = GetDataPtr(imDstBeg + imBeg);
+  T *featVecDst = pMatDst->GetDataPtr(imDstBeg);
   memcpy(featVecDst, featVecSrc, sizeof(T) * featVecLen);
 }
 
-template<typename T>
+template <typename T>
 void Matrix<T>::GetSubMat(
-    const int imBeg, const int inBeg, Matrix<T>* pMatDst) const {
+    const int imBeg, const int inBeg, Matrix<T> *pMatDst) const
+{
   // determine the starting/ending height/width indexes
   int imDstBeg = std::max(0, 0 - imBeg);
   int imDstEnd = std::min(pMatDst->GetDimLen(0) - 1, m_ - 1 - imBeg);
@@ -582,17 +689,19 @@ void Matrix<T>::GetSubMat(
   memset(pMatDst->GetDataPtr(), 0, sizeof(T) * pMatDst->GetEleCnt());
 
   // copy the selected part in the feature map
-  for (int imDst = imDstBeg; imDst <= imDstEnd; imDst++) {
+  for (int imDst = imDstBeg; imDst <= imDstEnd; imDst++)
+  {
     int im = imDst + imBeg;
-    const T* featVecSrc = GetDataPtr(im, inDstBeg + inBeg);
-    T* featVecDst = pMatDst->GetDataPtr(imDst, inDstBeg);
+    const T *featVecSrc = GetDataPtr(im, inDstBeg + inBeg);
+    T *featVecDst = pMatDst->GetDataPtr(imDst, inDstBeg);
     memcpy(featVecDst, featVecSrc, sizeof(T) * featVecLen);
-  }  // ENDFOR: imDst
+  } // ENDFOR: imDst
 }
 
-template<typename T>
+template <typename T>
 void Matrix<T>::GetSubMat(const int imBeg,
-    const int inBeg, const int ipBeg, Matrix<T>* pMatDst) const {
+                          const int inBeg, const int ipBeg, Matrix<T> *pMatDst) const
+{
   // determine the starting/ending height/width indexes
   int imDstBeg = std::max(0, 0 - imBeg);
   int imDstEnd = std::min(pMatDst->GetDimLen(0) - 1, m_ - 1 - imBeg);
@@ -606,20 +715,23 @@ void Matrix<T>::GetSubMat(const int imBeg,
   memset(pMatDst->GetDataPtr(), 0, sizeof(T) * pMatDst->GetEleCnt());
 
   // copy the selected part in the feature map
-  for (int imDst = imDstBeg; imDst <= imDstEnd; imDst++) {
+  for (int imDst = imDstBeg; imDst <= imDstEnd; imDst++)
+  {
     int im = imDst + imBeg;
-    for (int inDst = inDstBeg; inDst <= inDstEnd; inDst++) {
+    for (int inDst = inDstBeg; inDst <= inDstEnd; inDst++)
+    {
       int in = inDst + inBeg;
-      const T* featVecSrc = GetDataPtr(im, in, ipDstBeg + ipBeg);
-      T* featVecDst = pMatDst->GetDataPtr(imDst, inDst, ipDstBeg);
+      const T *featVecSrc = GetDataPtr(im, in, ipDstBeg + ipBeg);
+      T *featVecDst = pMatDst->GetDataPtr(imDst, inDst, ipDstBeg);
       memcpy(featVecDst, featVecSrc, sizeof(T) * featVecLen);
-    }  // ENDFOR: inDst
-  }  // ENDFOR: imDst
+    } // ENDFOR: inDst
+  }   // ENDFOR: imDst
 }
 
-template<typename T>
+template <typename T>
 void Matrix<T>::GetSubMat(const int imBeg, const int inBeg,
-    const int ipBeg, const int iqBeg, Matrix<T>* pMatDst) const {
+                          const int ipBeg, const int iqBeg, Matrix<T> *pMatDst) const
+{
   // determine the starting/ending height/width indexes
   int imDstBeg = std::max(0, 0 - imBeg);
   int imDstEnd = std::min(pMatDst->GetDimLen(0) - 1, m_ - 1 - imBeg);
@@ -635,18 +747,21 @@ void Matrix<T>::GetSubMat(const int imBeg, const int inBeg,
   memset(pMatDst->GetDataPtr(), 0, sizeof(T) * pMatDst->GetEleCnt());
 
   // copy the selected part in the feature map
-  for (int imDst = imDstBeg; imDst <= imDstEnd; imDst++) {
+  for (int imDst = imDstBeg; imDst <= imDstEnd; imDst++)
+  {
     int im = imDst + imBeg;
-    for (int inDst = inDstBeg; inDst <= inDstEnd; inDst++) {
+    for (int inDst = inDstBeg; inDst <= inDstEnd; inDst++)
+    {
       int in = inDst + inBeg;
-      for (int ipDst = ipDstBeg; ipDst <= ipDstEnd; ipDst++) {
+      for (int ipDst = ipDstBeg; ipDst <= ipDstEnd; ipDst++)
+      {
         int ip = ipDst + ipBeg;
-        const T* featVecSrc = GetDataPtr(im, in, ip, iqDstBeg + iqBeg);
-        T* featVecDst = pMatDst->GetDataPtr(imDst, inDst, ipDst, iqDstBeg);
+        const T *featVecSrc = GetDataPtr(im, in, ip, iqDstBeg + iqBeg);
+        T *featVecDst = pMatDst->GetDataPtr(imDst, inDst, ipDst, iqDstBeg);
         memcpy(featVecDst, featVecSrc, sizeof(T) * featVecLen);
-      }  // ENDFOR: ipDst
-    }  // ENDFOR: inDst
-  }  // ENDFOR: imDst
+      } // ENDFOR: ipDst
+    }   // ENDFOR: inDst
+  }     // ENDFOR: imDst
 }
 
-#endif  // INCLUDE_MATRIX_H_
+#endif // INCLUDE_MATRIX_H_

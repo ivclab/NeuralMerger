@@ -6,6 +6,7 @@
  */
 
 #include "../include/CaffeEvaWrapper.h"
+#include "leveldb/db.h"
 
 CaffeEvaWrapper::CaffeEvaWrapper(void) {
   // clear error message

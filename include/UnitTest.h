@@ -14,10 +14,15 @@ class UnitTest {
  public:
   // unit-test for the <CaffePara> class
   static void UT_CaffePara(void);
+  // unit-test for Parameters
+  static void UT_Models(void);
   // unit-test for the <CaffeEva> class
   static void UT_CaffeEva(void);
   // unit-test for the <CaffeEvaWrapper> class
   static void UT_CaffeEvaWrapper(void);
+  // unit-test for the Tensorflow experiments
+  static void UT_Tensorflow(int experiments);
+
 };
 
 #endif  // INCLUDE_UNITTEST_H_
