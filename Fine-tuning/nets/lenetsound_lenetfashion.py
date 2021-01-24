@@ -68,7 +68,7 @@ class lenetsound_lenetfashion:
         output=[]
         output.append(max_pool_2x2(tf.nn.relu(conv2d(image, self.w1[0]) + self.b1[0])))
         output.append(max_pool_2x2(tf.nn.relu(conv2d(output[0], self.w1[1]) + self.b1[1])))
-        output.append(tf.nn.relu(tf.matmul(tf.contrib.layers.flatten(output[1]), self.w1[2]) + self.b1[2]))
+        output.append(tf.nn.relu(tf.matmul(tf.keras.layers.Flatten()(output[1]), self.w1[2]) + self.b1[2]))
         output.append(tf.matmul(output[2], self.w1[3]) + self.b1[3])
         return output
     
@@ -83,7 +83,7 @@ class lenetsound_lenetfashion:
         output=[]
         output.append(max_pool_2x2(tf.nn.relu(conv2d(image, w1[0]) + self.b1[0])))
         output.append(max_pool_2x2(tf.nn.relu(conv2d(output[0], w1[1]) + self.b1[1])))
-        output.append(tf.nn.relu(tf.matmul(tf.contrib.layers.flatten(output[1]),w1[2]) + self.b1[2]))
+        output.append(tf.nn.relu(tf.matmul(tf.keras.layers.Flatten()(output[1]),w1[2]) + self.b1[2]))
         output.append(tf.nn.relu(tf.matmul(output[2], w1[3]) + self.b1[3]))
 
         return output
@@ -93,7 +93,7 @@ class lenetsound_lenetfashion:
         output=[]
         output.append(max_pool_2x2(tf.nn.relu(conv2d(image, self.w2[0]) + self.b2[0])))
         output.append(max_pool_2x2(tf.nn.relu(conv2d(output[0], self.w2[1]) + self.b2[1])))
-        output.append(tf.nn.relu(tf.matmul(tf.contrib.layers.flatten(output[1]), self.w2[2]) + self.b2[2]))
+        output.append(tf.nn.relu(tf.matmul(tf.keras.layers.Flatten()(output[1]), self.w2[2]) + self.b2[2]))
         output.append(tf.matmul(output[2], self.w2[3]) + self.b2[3])
 
         return output
@@ -109,7 +109,7 @@ class lenetsound_lenetfashion:
         output=[]
         output.append(max_pool_2x2(tf.nn.relu(conv2d(image, w2[0]) + self.b2[0])))
         output.append(max_pool_2x2(tf.nn.relu(conv2d(output[0], w2[1]) + self.b2[1])))
-        output.append(tf.nn.relu(tf.matmul(tf.contrib.layers.flatten(output[1]),w2[2]) + self.b2[2]))
+        output.append(tf.nn.relu(tf.matmul(tf.keras.layers.Flatten()(output[1]),w2[2]) + self.b2[2]))
         output.append(tf.nn.relu(tf.matmul(output[2], w2[3]) + self.b2[3]))
 
         return output

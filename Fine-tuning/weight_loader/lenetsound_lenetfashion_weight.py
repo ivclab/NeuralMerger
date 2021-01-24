@@ -22,7 +22,7 @@
 # ====================================================================================================
 import numpy as np
 import sys
-np.set_printoptions(threshold=np.nan)
+np.set_printoptions(threshold=sys.maxsize)
 from weight_loader.read_bin import load_bin,load_txt
 def weight_loader(config):
     MERGER_NAME = config.net
@@ -96,7 +96,7 @@ def weight_loader(config):
 
     print('----- Codebook  Parameter  Setting -----')
     print('Codebook  subspace: [%3d, %3d, %3d]'%(M_codebook[0].shape[2],M_codebook[1].shape[2],M_codebook[2].shape[2]))
-    print('Codeworkd numbers : [%3d, %3d, %3d]'%(M_codebook[0].shape[1],M_codebook[1].shape[1],M_codebook[2].shape[1]))
+    print('Codeword numbers : [%3d, %3d, %3d]'%(M_codebook[0].shape[1],M_codebook[1].shape[1],M_codebook[2].shape[1]))
     print('Max   Iteration   : %d'%config.max_step)
     sys.stdout.write('Learning Rate     : ')
     print(config.lr_rate)

@@ -39,7 +39,7 @@ import tensorflow as tf
 
 
 
-slim = tf.contrib.slim
+#slim = tf.contrib.slim
 
 _FILE_PATTERN = 'gender_%s_%d.tfrecords'
 

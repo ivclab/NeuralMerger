@@ -88,7 +88,7 @@ class vgg16avg_zfnet:
         output.append(tf.nn.relu(conv2d(output[15],self.w1[12]) + self.b1[12]))
         output.append(avg_pool(output[16]))
         
-        output.append(tf.nn.relu(tf.matmul(tf.contrib.layers.flatten(output[17]),self.w1[13]) +self.b1[13]))
+        output.append(tf.nn.relu(tf.matmul(tf.keras.layers.Flatten()(output[17]),self.w1[13]) +self.b1[13]))
         output.append(tf.nn.relu(tf.matmul(output[18],self.w1[14]) +self.b1[14]))
         output.append(tf.matmul(output[19],self.w1[15]) +self.b1[15])
         return output
@@ -125,7 +125,7 @@ class vgg16avg_zfnet:
         output.append(tf.nn.relu(conv2d(output[15],w1[12]) + self.b1[12]))
         output.append(avg_pool(output[16]))
 
-        output.append(tf.nn.relu(tf.matmul(tf.contrib.layers.flatten(output[17]),w1[13]) +self.b1[13]))
+        output.append(tf.nn.relu(tf.matmul(tf.keras.layers.Flatten()(output[17]),w1[13]) +self.b1[13]))
         output.append(tf.nn.relu(tf.matmul(output[18],w1[14]) +self.b1[14]))
         output.append(tf.matmul(output[19],w1[15]) +self.b1[15])
 
@@ -147,7 +147,7 @@ class vgg16avg_zfnet:
 
         output.append(max_pool_v(tf.nn.relu(conv2d(output[5],self.w2[4]) + self.b2[4])))
         
-        output.append(tf.nn.relu(tf.matmul(tf.contrib.layers.flatten(output[6]),self.w2[5]) +self.b2[5]))
+        output.append(tf.nn.relu(tf.matmul(tf.keras.layers.Flatten()(output[6]),self.w2[5]) +self.b2[5]))
         output.append(tf.nn.relu(tf.matmul(output[7],self.w2[6]) +self.b2[6]))
         output.append(tf.matmul(output[8],self.w2[7]) +self.b2[7])
 
@@ -174,7 +174,7 @@ class vgg16avg_zfnet:
 
         output.append(max_pool_v(tf.nn.relu(conv2d(output[5],w2[4]) + self.b2[4])))
         
-        output.append(tf.nn.relu(tf.matmul(tf.contrib.layers.flatten(output[6]),w2[5]) +self.b2[5]))
+        output.append(tf.nn.relu(tf.matmul(tf.keras.layers.Flatten()(output[6]),w2[5]) +self.b2[5]))
         output.append(tf.nn.relu(tf.matmul(output[7],w2[6]) +self.b2[6]))
         output.append(tf.matmul(output[8],w2[7]) +self.b2[7])
 

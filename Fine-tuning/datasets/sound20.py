@@ -36,10 +36,10 @@
 # ===================================================================================================================
 import os
 import tensorflow as tf
+#import tensorflow.compat.v1 as tf
 
 
-
-slim = tf.contrib.slim
+#slim = tf.contrib.slim
 
 _FILE_PATTERN = 'sound20_%s_%d.tfrecords'
 

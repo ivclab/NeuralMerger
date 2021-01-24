@@ -33,10 +33,19 @@ class MergedCaffeEva : public CaffeEva
 {
   
   public: 
-    // Merged the i-th layer by input Codebook
+    // Merge codebooks in the model
+    bool MergeModel( MergedCaffeEva& model);
+    // Merge codebooks in the model with different size
+    bool MergeModel( MergedCaffeEva& model, std::vector<int> & mapping);
+    // Merge codebooks in two Models
+    bool MergeModel( MergedCaffeEva& m1, MergedCaffeEva& m2);
+    // Merge codebooks in two Models with different size
+    bool MergeModel( MergedCaffeEva& m1, MergedCaffeEva& m2, std::vector< int>& mapping);
+    // Assign the codebook to the i-th layer
     bool MergeCodeBook(int LayerIndex, Matrix<float> &Codebook);
+
   private:
 
-}
+};
 
 #endif

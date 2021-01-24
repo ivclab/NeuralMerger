@@ -1,7 +1,7 @@
 # Fine-tuning
 ## Prerequisition
-- Python 2.7
-- [TensorFlow 1.4.0 or higher](https://github.com/tensorflow/tensorflow)
+- Python 2.7 or Python 3.6
+- [TensorFlow 1.X or higher](https://github.com/tensorflow/tensorflow)
 
 ## Datasets
 - Sound20 (https://github.com/ivclab/Sound20)

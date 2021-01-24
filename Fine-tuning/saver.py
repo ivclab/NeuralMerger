@@ -71,11 +71,14 @@ def saver(config,shared_codebook,folder_name):
     file_path = NEW_PATH + "/"  + 'M1_outputlayer'
     data_np   = shared_codebook[len(shared_codebook)-2].transpose(1,0)
     write_bin(file_path,data_np)
+    data_np.shape = (1, *data_np.shape) # Save centroid format for C code
+    write_bin( NEW_PATH + "/" + 'M1_centroid', data_np)  
 
     file_path = NEW_PATH + "/"  + 'M2_outputlayer'
     data_np   = shared_codebook[len(shared_codebook)-1].transpose(1,0)
     write_bin(file_path,data_np)
-	
+    data_np.shape = (1, *data_np.shape) # Save centroid format for C code
+    write_bin( NEW_PATH + "/" + 'M2_centroid', data_np)
 
 def write_bin(file_path,data_np):
     file_path   = file_path + '.bin'

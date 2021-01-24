@@ -40,8 +40,8 @@ from datasets import mnist_fashion
 from datasets import mvc_clothing
 from datasets import gender
 import numpy as np
-import tensorflow as tf
-slim = tf.contrib.slim
+#import tensorflow as tf
+#slim = tf.contrib.slim
 datasets_map = {
     'lenetsound': sound20,
     'lenetfashion': mnist_fashion,

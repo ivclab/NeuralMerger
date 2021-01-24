@@ -39,7 +39,7 @@ import tensorflow as tf
 import numpy as np
 
 
-slim = tf.contrib.slim
+#slim = tf.contrib.slim
 
 _FILE_PATTERN = 'mvc_clothing_%s_%d.tfrecords'
 

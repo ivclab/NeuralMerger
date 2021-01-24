@@ -32,7 +32,7 @@ from saver import saver
 import os
 from datetime import datetime
 tf.logging.set_verbosity(tf.logging.ERROR)
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def train_test(config):
     ###############
