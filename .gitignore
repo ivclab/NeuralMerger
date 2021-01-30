@@ -10,3 +10,6 @@ QuanCNN
 # ignore the binary file containing 1k images
 /ILSVRC12.227x227.IMG/dataMatTst.single.bin
 
+.vscode
+Data/
+Models/
